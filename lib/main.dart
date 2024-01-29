@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-// import 'package:psc_119_agent/home.dart';
-import 'package:psc_119_agent/module/login/login_controller_two.dart';
 import 'package:psc_119_agent/pages/g_maps_sample.dart';
 import 'package:psc_119_agent/pages/home.dart';
-import 'package:psc_119_agent/pages/main_user.dart';
 // import 'home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -72,8 +68,6 @@ class _MainPageState extends State<MainPage> {
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   bool visibilityPass = false;
-  final LoginControllerTwo _controller = LoginControllerTwo();
-  // debugPrint('system run');
   Future<void> cekToken() async {
     // super._cekToken();
 

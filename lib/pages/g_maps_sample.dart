@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 import 'package:location/location.dart';
-import 'package:psc_119_agent/config.dart';
+import 'package:psc_119_agent/utils/config.dart';
 import 'package:psc_119_agent/main.dart';
 import 'package:psc_119_agent/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';

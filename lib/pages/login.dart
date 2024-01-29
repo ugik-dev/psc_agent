@@ -1,22 +1,20 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:psc_119_agent/config.dart';
+import 'package:psc_119_agent/utils/config.dart';
 import 'package:psc_119_agent/pages/g_maps_sample.dart';
 import 'package:psc_119_agent/pages/home.dart';
-import 'package:psc_119_agent/pages/main_user.dart';
-// import 'package:flutter_icons/flutter_icons.dart';
 import 'package:psc_119_agent/utils/constants.dart';
 import 'package:psc_119_agent/widgets/app_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert' as convert;
 
 import 'package:http/http.dart' as http;
-import '../module/login/login_controller.dart';
 
 class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
+
   // const LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -37,195 +35,183 @@ class _LoginState extends State<Login> {
       backgroundColor: Constants.primaryColor,
       body: SafeArea(
         bottom: false,
-        child: Container(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                right: 0.0,
-                top: -20.0,
-                child: Opacity(
-                  opacity: 0.3,
-                  child: Image.asset(
-                    "assets/images/washing_machine_illustration.png",
-                  ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              right: 0.0,
+              top: -20.0,
+              child: Opacity(
+                opacity: 0.3,
+                child: Image.asset(
+                  "assets/images/washing_machine_illustration.png",
                 ),
               ),
-              SingleChildScrollView(
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 15.0,
+            ),
+            SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 15.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                              return Home();
+                            }));
+                          },
+                          child: const Icon(
+                            Icons.keyboard_backspace_rounded,
+                            color: Colors.white,
+                          ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                  return Home();
-                                }));
-                              },
-                              child: const Icon(
-                                Icons.keyboard_backspace_rounded,
-                                color: Colors.white,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            Text(
-                              "Masukkan Data Login",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  ?.copyWith(
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Text(
+                          "Masukkan Data Login",
+                          style:
+                              Theme.of(context).textTheme.headline6?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,
                                   ),
-                            )
-                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40.0,
+                  ),
+                  Flexible(
+                    child: Container(
+                      width: double.infinity,
+                      constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height - 180.0,
+                      ),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0),
                         ),
+                        color: Colors.white,
                       ),
-                      SizedBox(
-                        height: 40.0,
-                      ),
-                      Flexible(
-                        child: Container(
-                          width: double.infinity,
-                          constraints: BoxConstraints(
-                            minHeight:
-                                MediaQuery.of(context).size.height - 180.0,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30.0),
-                              topRight: Radius.circular(30.0),
-                            ),
-                            color: Colors.white,
-                          ),
-                          padding: EdgeInsets.all(24.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Lets make a generic input widget
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Lets make a generic input widget
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("ID"),
-                                  const SizedBox(height: 5.0),
-                                  Container(
-                                    height: ScreenUtil().setHeight(48.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    child: TextFormField(
-                                      controller: idLoginController,
-                                      obscureText: false,
-                                      decoration: InputDecoration(
-                                        prefixIcon: const Icon(
-                                            Icons.account_circle_outlined),
-                                        enabledBorder: const OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(74, 77, 84, 0.2),
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Constants.primaryColor,
-                                          ),
-                                        ),
-                                        hintText: "ID",
-                                        hintStyle: const TextStyle(
-                                          fontSize: 14.0,
-                                          color: Color.fromRGBO(
-                                              105, 108, 121, 0.7),
-                                        ),
+                              const Text("ID"),
+                              const SizedBox(height: 5.0),
+                              Container(
+                                height: ScreenUtil().setHeight(48.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: TextFormField(
+                                  controller: idLoginController,
+                                  obscureText: false,
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(
+                                        Icons.account_circle_outlined),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color.fromRGBO(74, 77, 84, 0.2),
                                       ),
                                     ),
-                                  )
-                                ],
-                              ),
-
-                              SizedBox(
-                                height: 25.0,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("KEY"),
-                                  const SizedBox(height: 5.0),
-                                  Container(
-                                    height: ScreenUtil().setHeight(48.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    child: TextFormField(
-                                      controller: keyLoginController,
-                                      decoration: InputDecoration(
-                                        prefixIcon:
-                                            const Icon(Icons.contact_phone),
-                                        enabledBorder: const OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color:
-                                                Color.fromRGBO(74, 77, 84, 0.2),
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Constants.primaryColor,
-                                          ),
-                                        ),
-                                        hintText: "KEY",
-                                        hintStyle: const TextStyle(
-                                          fontSize: 14.0,
-                                          color: Color.fromRGBO(
-                                              105, 108, 121, 0.7),
-                                        ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Constants.primaryColor,
                                       ),
                                     ),
-                                  )
-                                ],
-                              ),
-
-                              SizedBox(
-                                height: 20.0,
-                              ),
-
-                              (!isLoading)
-                                  ? AppButton(
-                                      type: ButtonType.PRIMARY,
-                                      text: "Masuk",
-                                      onPressed: _login,
-                                    )
-                                  : const SizedBox(
-                                      height: 32,
-                                      width: 32,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.blue,
-                                        strokeWidth: 3,
-                                      ),
+                                    hintText: "ID",
+                                    hintStyle: const TextStyle(
+                                      fontSize: 14.0,
+                                      color: Color.fromRGBO(105, 108, 121, 0.7),
                                     ),
+                                  ),
+                                ),
+                              )
                             ],
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+
+                          const SizedBox(
+                            height: 25.0,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("KEY"),
+                              const SizedBox(height: 5.0),
+                              Container(
+                                height: ScreenUtil().setHeight(48.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: TextFormField(
+                                  controller: keyLoginController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.contact_phone),
+                                    enabledBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Color.fromRGBO(74, 77, 84, 0.2),
+                                      ),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Constants.primaryColor,
+                                      ),
+                                    ),
+                                    hintText: "KEY",
+                                    hintStyle: const TextStyle(
+                                      fontSize: 14.0,
+                                      color: Color.fromRGBO(105, 108, 121, 0.7),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+
+                          const SizedBox(
+                            height: 20.0,
+                          ),
+
+                          (!isLoading)
+                              ? AppButton(
+                                  type: ButtonType.PRIMARY,
+                                  text: "Masuk",
+                                  onPressed: _login,
+                                )
+                              : const SizedBox(
+                                  height: 32,
+                                  width: 32,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                    strokeWidth: 3,
+                                  ),
+                                ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -288,7 +274,7 @@ class _LoginState extends State<Login> {
 
       print(prefs.getString('token'));
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => MapSample()));
+          context, MaterialPageRoute(builder: (context) => const MapSample()));
       print('Number of books about http: $message.');
     } else {
       try {
@@ -299,7 +285,7 @@ class _LoginState extends State<Login> {
       } catch (e) {
         // Handle JSON decoding error, if any
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Terjadi kesalahan ")));
+            .showSnackBar(const SnackBar(content: Text("Terjadi kesalahan ")));
         print('Unable to parse error message.');
       }
     }
